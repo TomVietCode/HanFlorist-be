@@ -1,0 +1,101 @@
+[{
+  "_id": {
+    "$oid": "6780cae0b151d56f68df81de"
+  },
+  "title": "Bó hoa hồng O'hara mix lá bạc",
+  "categoryId": "670c02bf5b371fe9c4880968",
+  "featured": "0",
+  "description": "",
+  "price": 280000,
+  "discountPercentage": 0,
+  "stock": 10,
+  "thumbnail": "https://content.pancake.vn/2-25/s1800x1650/fwebp0/2025/1/3/23f5945a7e13f1c1769ccef0cd4cc6f5e07da454.png",
+  "status": "active",
+  "position": 1,
+  "createdBy": "6698d6467f265f213ced6910",
+  "deleted": false,
+  "createdAt": {
+    "$date": "2025-01-10T07:23:12.227Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-10T07:23:12.227Z"
+  },
+  "slug": "bo-hoa-hong-o-hara-mix-la-bac",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6780cb17ad2df20998e356ac"
+  },
+  "title": "Bó hoa Rừng hoa - Size M",
+  "categoryId": "670c02d75b371fe9c4880985",
+  "featured": "0",
+  "description": "",
+  "price": 450000,
+  "discountPercentage": 0,
+  "stock": 10,
+  "thumbnail": "https://content.pancake.vn/2-24/s1800x1650/2024/12/4/0bdc85c67338fb1bdf9635049ff9b47d9aded838.jpg",
+  "status": "active",
+  "position": 2,
+  "createdBy": "6698d6467f265f213ced6910",
+  "deleted": false,
+  "createdAt": {
+    "$date": "2025-01-10T07:24:07.499Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-10T07:24:07.499Z"
+  },
+  "slug": "bo-hoa-rung-hoa-size-m",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6780cb5593d1d0c9a0dbdf98"
+  },
+  "title": "Giỏ hoa mây tone cam - Size M+",
+  "categoryId": "670c03195b371fe9c48809e2",
+  "featured": "0",
+  "description": "",
+  "price": 750000,
+  "discountPercentage": 0,
+  "stock": 9,
+  "thumbnail": "https://content.pancake.vn/2-25/s1800x1650/fwebp0/2025/1/3/9b4a3e5a1ad98916503e46a50aca35538ffa7a3d.png",
+  "status": "active",
+  "position": 3,
+  "createdBy": "6698d6467f265f213ced6910",
+  "deleted": false,
+  "createdAt": {
+    "$date": "2025-01-10T07:25:09.491Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-10T07:25:09.491Z"
+  },
+  "slug": "gio-hoa-may-tone-cam-size-m",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6780ce3cac42ce22434905ea"
+  },
+  "title": "Giỏ mây nhỏ Capuchino mix tulip - Size S",
+  "categoryId": "670c03195b371fe9c48809e2",
+  "featured": "0",
+  "description": "",
+  "price": 350000,
+  "discountPercentage": 0,
+  "stock": 10,
+  "thumbnail": "https://content.pancake.vn/2-24/s1800x1650/2024/9/28/7bd18e1c377f1791653dd50f216e3db14f0be4cb.jpg",
+  "status": "active",
+  "position": 4,
+  "createdBy": "6698d6467f265f213ced6910",
+  "deleted": false,
+  "createdAt": {
+    "$date": "2025-01-10T07:37:32.926Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-10T07:37:49.015Z"
+  },
+  "slug": "gio-may-nho-capuchino-mix-tulip-size-s",
+  "__v": 0,
+  "updatedBy": "6698d6467f265f213ced6910"
+}]

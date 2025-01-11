@@ -4,10 +4,13 @@ const express = require("express")
 const database = require("./config/connectDB")
 const clientRoute = require("./routers/client/index.route")
 const adminRoute = require("./routers/admin/index.route")
-
+const cors = require("cors")
 database.connect()
 const app = express()
 const port = process.env.PORT
+
+// CORS
+app.use(cors())
 
 // Parse body 
 app.use(express.json())
@@ -19,5 +22,5 @@ clientRoute(app)
 adminRoute(app)
 
 app.listen(port, () => {
-  console.log("App is listening on port 3001")
+  console.log("App is listening on port " + port)
 })

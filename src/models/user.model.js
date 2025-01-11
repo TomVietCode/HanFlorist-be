@@ -1,15 +1,15 @@
 const mongoose = require("mongoose")
 
-const accountSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     name: String,
     email: String,
     username: String,
     password: String,
-    salt: String,
     phone: String,
     avatar: String,
-    role_id: String,
+    address: String,
+    role: String,
     status: String,
     deleted: {
       type: Boolean,
@@ -22,6 +22,7 @@ const accountSchema = new mongoose.Schema(
   }
 )
 
-const Account = mongoose.model("Account", accountSchema, "accounts")
+const User = mongoose.model("User", userSchema, "users")
 
-module.exports = Account
+module.exports = User
+

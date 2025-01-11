@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt")
-const Account = require("../../models/account.model")
-const jwt = require("jsonwebtoken")
+const User = require("../../models/user.model")
+const { generateToken } = require("../../helpers/jwt")
 
 module.exports.login = async (req, res) => {
   try {
@@ -12,7 +12,7 @@ module.exports.login = async (req, res) => {
       return
     }
     
-    const user = await Account.findOne({
+    const user = await User.findOne({
       username: username,
       deleted: false,
       status: "active"
@@ -38,7 +38,7 @@ module.exports.login = async (req, res) => {
       role: user.role
     }
 
-    const accessToken = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: "7d" })
+    const accessToken = generateToken(payload)
 
     res.status(200).json({ 
       data: accessToken

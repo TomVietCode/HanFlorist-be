@@ -10,7 +10,9 @@ npm install
 
 ```
 PORT=3001
-MONGO_URL=YOUR_MONGODB_CONNECTION_STRING || mongodb://localhost:27017/han-florist
+MONGO_URL=mongodb+srv://mcuong04work:BTVnuCq4epyebaoc@cluster0.lrmikma.mongodb.net/product-management
+
+JWT_SECRET_KEY=Wj8-T--EfwZ5OQqp9lf3IDOUwX2xzkUuxaJPLti2sbRrmT1FgzVYnhkOANdGrWmP8WFePM9b39agMA-9GUkazg
 
 ```
 

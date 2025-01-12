@@ -2,7 +2,7 @@ const { verifyToken } = require("../helpers/jwt")
 
 const requireAuth = (req, res, next) => {
   // Lấy token từ header Authorization
-  const token = req.headers.authorization.split(' ')[1]
+  const token = req.headers.authorization?.split(' ')[1]
 
   if (!token) {
     return res.status(401).json({

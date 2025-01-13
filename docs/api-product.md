@@ -54,8 +54,8 @@
 {
   "title": "string",
   "price": "number",
-  "status": "string",
-  "createdBy": "string"
+  "thumbnail": "string",
+  "stock": "number"
   //...
 }
 ```
@@ -66,9 +66,7 @@
 
 ```json
 {
-  "data": {
-    "_id": "string",
-  }
+  "data": "id"
 }
 ```
 

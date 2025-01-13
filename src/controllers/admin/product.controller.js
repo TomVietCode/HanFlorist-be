@@ -65,6 +65,7 @@ module.exports.list = async (req, res) => {
   }
 }
 
+//[POST] /admin/products
 module.exports.create = async (req, res) => {
   try {
     req.body.createdBy = req.user.decoded.sub
@@ -77,7 +78,7 @@ module.exports.create = async (req, res) => {
       data: product.id
     })
   } catch (error) {
-    res.status(200).json({
+    res.status(400).json({
       message: error.message
     })
   }

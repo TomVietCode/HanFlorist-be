@@ -6,5 +6,5 @@ module.exports = (app) => {
   const path = "/admin"
 
   app.use(path + "/auth", authRoute)
-  app.use(path + "/products", requireAuth, productRoute)
+  app.use(path + "/products", requireAuth("admin"), productRoute)
 }

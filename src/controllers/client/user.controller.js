@@ -218,6 +218,7 @@ module.exports.resetPasswordPatch = async (req, res) => {
       success: true,
       message: "Password reset successfully!",
     });
+    console.log("ok");
   } catch (error) {
     res.status(500).json({
       success: false,

@@ -1,4 +1,5 @@
 const dotenv = require("dotenv")
+const bcrypt = require("bcrypt")
 dotenv.config()
 const express = require("express")
 const database = require("./config/connectDB")

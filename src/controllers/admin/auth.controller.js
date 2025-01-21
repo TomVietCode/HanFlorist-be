@@ -11,14 +11,14 @@ module.exports.login = async (req, res) => {
       })
       return
     }
-    
+
     const user = await User.findOne({
       username: username,
       deleted: false,
-      status: "active"
+      status: "active",
     })
-    
-    if(!user) {
+
+    if (!user) {
       res.status(404).json({
         message: "Không tồn tại tài khoản",
       })
@@ -26,7 +26,7 @@ module.exports.login = async (req, res) => {
     }
 
     const isPasswordMatch = await bcrypt.compare(password, user.password)
-    if(isPasswordMatch) {
+    if (isPasswordMatch) {
       res.status(404).json({
         message: "Sai mật khẩu",
       })
@@ -35,15 +35,14 @@ module.exports.login = async (req, res) => {
 
     const payload = {
       sub: user.id,
-      role: user.role
+      role: user.role,
     }
 
     const accessToken = generateToken(payload)
 
-    res.status(200).json({ 
-      data: accessToken
+    res.status(200).json({
+      data: accessToken,
     })
-
   } catch (error) {
     console.error(error.message)
     res.status(400).json({

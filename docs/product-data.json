@@ -1,42 +1,14 @@
-[{
-  "_id": {
-    "$oid": "6780cae0b151d56f68df81de"
-  },
-  "title": "Bó hoa hồng O'hara mix lá bạc",
-  "categoryId": "670c02bf5b371fe9c4880968",
-  "featured": "0",
-  "description": "",
-  "price": 280000,
-  "discountPercentage": 0,
-  "stock": 10,
-  "thumbnail": "https://content.pancake.vn/2-25/s1800x1650/fwebp0/2025/1/3/23f5945a7e13f1c1769ccef0cd4cc6f5e07da454.png",
-  "status": "active",
-  "position": 1,
-  "createdBy": "6698d6467f265f213ced6910",
-  "deleted": false,
-  "createdAt": {
-    "$date": "2025-01-10T07:23:12.227Z"
-  },
-  "updatedAt": {
-    "$date": "2025-01-10T07:23:12.227Z"
-  },
-  "slug": "bo-hoa-hong-o-hara-mix-la-bac",
-  "__v": 0
-},
+[
 {
-  "_id": {
-    "$oid": "6780cb17ad2df20998e356ac"
-  },
-  "title": "Bó hoa Rừng hoa - Size M",
+  "title": "Wedding Car - Hoa mix tone xanh trắng",
   "categoryId": "670c02d75b371fe9c4880985",
   "featured": "0",
   "description": "",
   "price": 450000,
   "discountPercentage": 0,
   "stock": 10,
-  "thumbnail": "https://content.pancake.vn/2-24/s1800x1650/2024/12/4/0bdc85c67338fb1bdf9635049ff9b47d9aded838.jpg",
+  "thumbnail": "https://content.pancake.vn/2-25/s1800x1650/fwebp0/2025/1/3/d448f3bebb623ee35b15a604d3a56f1216399b93.png",
   "status": "active",
-  "position": 2,
   "createdBy": "6698d6467f265f213ced6910",
   "deleted": false,
   "createdAt": {
@@ -45,48 +17,62 @@
   "updatedAt": {
     "$date": "2025-01-10T07:24:07.499Z"
   },
-  "slug": "bo-hoa-rung-hoa-size-m",
+  "slug": "Wedding-car-hoa-mix-tone-xanh-trang",
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6780cb5593d1d0c9a0dbdf98"
-  },
-  "title": "Giỏ hoa mây tone cam - Size M+",
+  "title": "Set hoa để bàn trang trí tiệc cưới/ ăn hỏi tại gia",
   "categoryId": "670c03195b371fe9c48809e2",
   "featured": "0",
   "description": "",
   "price": 750000,
   "discountPercentage": 0,
   "stock": 9,
-  "thumbnail": "https://content.pancake.vn/2-25/s1800x1650/fwebp0/2025/1/3/9b4a3e5a1ad98916503e46a50aca35538ffa7a3d.png",
+  "thumbnail": "https://content.pancake.vn/1/s900x900/35/5f/a4/63/4c4a06ec8fd1ac397a223701751f330919dc7312bf270c87ba798598.jpg",
   "status": "active",
-  "position": 3,
   "createdBy": "6698d6467f265f213ced6910",
   "deleted": false,
   "createdAt": {
     "$date": "2025-01-10T07:25:09.491Z"
   },
+  "slug": "Set-hoa-de-ban",
   "updatedAt": {
     "$date": "2025-01-10T07:25:09.491Z"
   },
-  "slug": "gio-hoa-may-tone-cam-size-m",
   "__v": 0
 },
 {
-  "_id": {
-    "$oid": "6780ce3cac42ce22434905ea"
-  },
-  "title": "Giỏ mây nhỏ Capuchino mix tulip - Size S",
+  "title": "Bó hoa Diên vĩ tím - Size M",
   "categoryId": "670c03195b371fe9c48809e2",
   "featured": "0",
   "description": "",
   "price": 350000,
   "discountPercentage": 0,
   "stock": 10,
-  "thumbnail": "https://content.pancake.vn/2-24/s1800x1650/2024/9/28/7bd18e1c377f1791653dd50f216e3db14f0be4cb.jpg",
+  "thumbnail": "https://content.pancake.vn/2-24/s1800x1650/2024/12/4/572dc95e5d08282802694a6e862d2f2be8628a43.jpg",
   "status": "active",
-  "position": 4,
+  "createdBy": "6698d6467f265f213ced6910",
+  "deleted": false,
+  "createdAt": {
+    "$date": "2025-01-10T07:37:32.926Z"
+  },
+  "slug": "Set-hoa-de-ban2",
+  "updatedAt": {
+    "$date": "2025-01-10T07:37:49.015Z"
+  },
+  "__v": 0,
+  "updatedBy": "6698d6467f265f213ced6910"
+}, 
+{
+  "title": "Bó mix nhiều loại hoa style garden - Size L",
+  "categoryId": "670c03195b371fe9c48809e2",
+  "featured": "0",
+  "description": "",
+  "price": 350000,
+  "discountPercentage": 0,
+  "stock": 10,
+  "thumbnail": "https://content.pancake.vn/2-24/s1800x1650/2024/9/3/ceaa80d636cbf97bc1279bafa45775144468c57c.jpg",
+  "status": "active",
   "createdBy": "6698d6467f265f213ced6910",
   "deleted": false,
   "createdAt": {
@@ -95,7 +81,74 @@
   "updatedAt": {
     "$date": "2025-01-10T07:37:49.015Z"
   },
-  "slug": "gio-may-nho-capuchino-mix-tulip-size-s",
+  "slug": "Set-hoa-de-ban1",
   "__v": 0,
   "updatedBy": "6698d6467f265f213ced6910"
-}]
+},
+{
+  "title": "Giỏ hoa mica - Hồng đỏ mix tuyết mai",
+  "categoryId": "670c03195b371fe9c48809e2",
+  "featured": "0",
+  "description": "",
+  "price": 3500000,
+  "discountPercentage": 0,
+  "stock": 10,
+  "thumbnail": "https://content.pancake.vn/2-25/s1800x1650/fwebp0/2025/1/3/3099201999a5dd95847dd8ca0efcc964ca27ed76.png",
+  "status": "active",
+  "createdBy": "6698d6467f265f213ced6910",
+  "deleted": false,
+  "createdAt": {
+    "$date": "2025-01-10T07:37:32.926Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-10T07:37:49.015Z"
+  },
+  "slug": "Set-hoa-de-ban3",
+  "__v": 0,
+  "updatedBy": "6698d6467f265f213ced6910"
+},
+{
+  "title": "Bó hoa tin nhắn tú cầu hồng mix tone hồng cam",
+  "categoryId": "670c03195b371fe9c48809e2",
+  "featured": "0",
+  "description": "",
+  "price": 350000,
+  "discountPercentage": 0,
+  "stock": 10,
+  "thumbnail": "https://content.pancake.vn/2-24/s1800x1650/2024/7/29/05ff64082f47b3ffb5d7a415bbfb8987f8279ccf.jpg",
+  "status": "active",
+  "createdBy": "6698d6467f265f213ced6910",
+  "deleted": false,
+  "createdAt": {
+    "$date": "2025-01-10T07:37:32.926Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-10T07:37:49.015Z"
+  },
+  "slug": "Set-hoa-de-ban4",
+  "__v": 0,
+  "updatedBy": "6698d6467f265f213ced6910"
+},
+{
+  "title": "Bó hoa cưới Tulip trắng",
+  "categoryId": "670c03195b371fe9c48809e2",
+  "featured": "0",
+  "description": "",
+  "price": 350000,
+  "discountPercentage": 0,
+  "stock": 10,
+  "thumbnail": "https://content.pancake.vn/2-25/s1800x1650/fwebp0/2025/1/3/529e27fa65030c88cc988513d91c53aa68b72183.png",
+  "status": "active",
+  "createdBy": "6698d6467f265f213ced6910",
+  "deleted": false,
+  "createdAt": {
+    "$date": "2025-01-10T07:37:32.926Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-10T07:37:49.015Z"
+  },
+  "slug": "Set-hoa-de-ban5",
+  "__v": 0,
+  "updatedBy": "6698d6467f265f213ced6910"
+}
+]

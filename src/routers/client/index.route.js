@@ -10,4 +10,7 @@ module.exports = (app) => {
 
   app.use(version + "/users", userRoute);
 
+  app.use(version + "/products", productRoute);
+
+
 }

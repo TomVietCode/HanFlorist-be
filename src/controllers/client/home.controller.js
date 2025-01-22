@@ -8,7 +8,7 @@ module.exports.index = async (req, res) => {
       status: "active",
       deleted: false,
     })
-      .limit(6) 
+      .limit(9) 
       .sort({ position: "desc" }); 
 
     for (let product of productsFeature) {
@@ -21,7 +21,7 @@ module.exports.index = async (req, res) => {
       status: "active",
       deleted: false,
     })
-      .limit(8) 
+      .limit(10) 
       .sort({ position: "desc" }); 
 
     for (const product of productsNew) {

@@ -1,7 +1,10 @@
 const productRoute = require("./product.route")
 const userRoute = require("./user.route")
+const homeRoutes = require("./home.route")
 module.exports = (app) => {
   const version = "/v1"
+
+  app.use(version + "/", homeRoutes)
 
   app.use(version + "/products", productRoute)
 

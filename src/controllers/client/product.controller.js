@@ -4,16 +4,39 @@ const Category = require("../../models/product.category");
 // [GET] /v1/products/
 module.exports.index = async (req, res) => {
   try {
+    const sortBy = req.query.sortBy || "newest";
+
+    let sortCriteria = {};
+    switch (sortBy) {
+      case "newest": 
+        sortCriteria = { createdAt: -1 };
+        break;
+      case "oldest": 
+        sortCriteria = { createdAt: 1 };
+        break;
+      case "priceAsc": 
+        sortCriteria = { price: 1 };
+        break;
+      case "priceDesc": 
+        sortCriteria = { price: -1 };
+        break;
+      default:
+        sortCriteria = { createdAt: -1 }; 
+    }
+
+
     const products = await Product.find({
       status: "active",
-    }).sort({ createdAt: "desc" });
+    }).sort(sortCriteria);
 
     res.status(200).json({
+      message: "Products retrieved successfully!",
       data: products,
     });
   } catch (error) {
     res.status(500).json({
       message: "Internal server error",
+      error: error.message,
     });
   }
 };
@@ -40,6 +63,7 @@ module.exports.detail = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Internal server error",
+      error: error.message,
     });
   }
 };
@@ -56,7 +80,29 @@ module.exports.slugCategory = async (req, res) => {
       return res.status(404).json({ message: "Category not found!" });
     }
 
-    //tree category
+    
+    const sortBy = req.query.sortBy || "newest";
+
+  
+    let sortCriteria = {};
+    switch (sortBy) {
+      case "newest": 
+        sortCriteria = { createdAt: -1 };
+        break;
+      case "oldest": 
+        sortCriteria = { createdAt: 1 };
+        break;
+      case "priceAsc": 
+        sortCriteria = { price: 1 };
+        break;
+      case "priceDesc":
+        sortCriteria = { price: -1 };
+        break;
+      default:
+        sortCriteria = { createdAt: -1 }; 
+    }
+
+    
     const getSubCategory = async (parent_id) => {
       let allSub = [];
       const listSub = await Category.find({
@@ -75,10 +121,11 @@ module.exports.slugCategory = async (req, res) => {
     const listSubCategory = await getSubCategory(category.id);
     const listSubCategoryId = listSubCategory.map((item) => item.id);
 
+   
     const products = await Product.find({
       categoryId: { $in: [category.id, ...listSubCategoryId] },
       status: "active",
-    });
+    }).sort(sortCriteria);
 
     res.status(200).json({
       message: "Product list by category retrieved successfully!",
@@ -90,6 +137,7 @@ module.exports.slugCategory = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Internal server error",
+      error: error.message,
     });
   }
 };

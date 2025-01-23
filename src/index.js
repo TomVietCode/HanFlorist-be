@@ -8,7 +8,9 @@ const cors = require("cors")
 database.connect()
 const app = express()
 const port = process.env.PORT
+const cookieParser = require('cookie-parser');
 
+app.use(cookieParser());
 // CORS
 app.use(cors())
 

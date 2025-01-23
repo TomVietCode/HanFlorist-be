@@ -28,7 +28,6 @@ module.exports.register = async (req, res) => {
       phone,
       role: "client",
       status: "active",
-      deleted: false,
     });
 
     await newUser.save();
@@ -47,7 +46,6 @@ module.exports.register = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server error",
-      error: error.message,
     });
   }
 };
@@ -89,14 +87,11 @@ module.exports.login = async (req, res) => {
 module.exports.logout = (req, res) => {
   try {
     res.status(200).json({
-      success: true,
       message: "Logout successful!",
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
       message: "Server error",
-      error: error.message,
     });
   }
 };
@@ -109,7 +104,6 @@ module.exports.forgotPasswordPost = async (req, res) => {
     const existEmail = await User.findOne({ email });
     if (!existEmail) {
       return res.status(404).json({
-        success: false,
         message: "Email does not exist!",
       });
     }
@@ -143,15 +137,13 @@ module.exports.forgotPasswordPost = async (req, res) => {
     await sendEmailHelper.sendEmail(email, subject, html);
 
     return res.status(200).json({
-      success: true,
       message: "OTP has been sent to your email!",
       email,
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
+
       message: "Server error",
-      error: error.message,
     });
   }
 };
@@ -163,14 +155,12 @@ module.exports.otpPasswordPost = async (req, res) => {
     const existOTP = await ForgotPassword.findOne({ email, otp });
     if (!existOTP) {
       return res.status(400).json({
-        success: false,
         message: "Invalid OTP!",
       });
     }
 
     if (existOTP.expireAt < Date.now()) {
       return res.status(400).json({
-        success: false,
         message: "OTP has expired!",
       });
     }
@@ -182,15 +172,12 @@ module.exports.otpPasswordPost = async (req, res) => {
     await user.save();
 
     res.status(200).json({
-      success: true,
       message: "OTP verified successfully!",
       token,
     });
   } catch (error) {
     res.status(500).json({
-      success: false,
       message: "Server error",
-      error: error.message,
     });
   }
 };
@@ -203,7 +190,6 @@ module.exports.resetPasswordPatch = async (req, res) => {
     const user = await User.findOne({ tokenUser: token });
     if (!user) {
       return res.status(400).json({
-        success: false,
         message: "Invalid or expired token!",
       });
     }
@@ -215,14 +201,41 @@ module.exports.resetPasswordPatch = async (req, res) => {
     await user.save();
 
     res.status(200).json({
-      success: true,
+
       message: "Password reset successfully!",
     });
     console.log("ok");
+    console.log("123");
   } catch (error) {
     res.status(500).json({
-      success: false,
+
       message: "Server error",
+      error: error.message,
+    });
+  }
+};
+
+// [GET] /v1/users/profile
+module.exports.profile = async (req, res) => {
+  try {
+    const userId = req.user.userId; 
+
+    
+    const user = await User.findById(userId).select("-password"); 
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found!",
+      });
+    }
+
+    res.status(200).json({
+      message: "User profile retrieved successfully!",
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error",
       error: error.message,
     });
   }

@@ -6,27 +6,38 @@ module.exports.index = async (req, res) => {
   try {
     const sortBy = req.query.sortBy || "newest";
 
+    
+    const minPrice = req.query.minPrice ? parseFloat(req.query.minPrice) : 0;
+    const maxPrice = req.query.maxPrice ? parseFloat(req.query.maxPrice) : Infinity;
+
+   
     let sortCriteria = {};
     switch (sortBy) {
-      case "newest": 
+      case "newest":
         sortCriteria = { createdAt: -1 };
         break;
-      case "oldest": 
+      case "oldest":
         sortCriteria = { createdAt: 1 };
         break;
-      case "priceAsc": 
+      case "priceAsc":
         sortCriteria = { price: 1 };
         break;
-      case "priceDesc": 
+      case "priceDesc":
         sortCriteria = { price: -1 };
         break;
       default:
-        sortCriteria = { createdAt: -1 }; 
+        sortCriteria = { createdAt: -1 };
     }
 
+    
+    const priceFilter = {};
+    if (req.query.minPrice) priceFilter.$gte = minPrice;
+    if (req.query.maxPrice) priceFilter.$lte = maxPrice;
 
+ 
     const products = await Product.find({
       status: "active",
+      price: priceFilter,
     }).sort(sortCriteria);
 
     res.status(200).json({
@@ -36,7 +47,6 @@ module.exports.index = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Internal server error",
-      error: error.message,
     });
   }
 };
@@ -63,7 +73,6 @@ module.exports.detail = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Internal server error",
-      error: error.message,
     });
   }
 };
@@ -80,27 +89,34 @@ module.exports.slugCategory = async (req, res) => {
       return res.status(404).json({ message: "Category not found!" });
     }
 
-    
     const sortBy = req.query.sortBy || "newest";
 
-  
+
+    const minPrice = req.query.minPrice ? parseFloat(req.query.minPrice) : 0;
+    const maxPrice = req.query.maxPrice ? parseFloat(req.query.maxPrice) : Infinity;
+
     let sortCriteria = {};
     switch (sortBy) {
-      case "newest": 
+      case "newest":
         sortCriteria = { createdAt: -1 };
         break;
-      case "oldest": 
+      case "oldest":
         sortCriteria = { createdAt: 1 };
         break;
-      case "priceAsc": 
+      case "priceAsc":
         sortCriteria = { price: 1 };
         break;
       case "priceDesc":
         sortCriteria = { price: -1 };
         break;
       default:
-        sortCriteria = { createdAt: -1 }; 
+        sortCriteria = { createdAt: -1 };
     }
+
+    
+    const priceFilter = {};
+    if (req.query.minPrice) priceFilter.$gte = minPrice;
+    if (req.query.maxPrice) priceFilter.$lte = maxPrice;
 
     
     const getSubCategory = async (parent_id) => {
@@ -121,10 +137,11 @@ module.exports.slugCategory = async (req, res) => {
     const listSubCategory = await getSubCategory(category.id);
     const listSubCategoryId = listSubCategory.map((item) => item.id);
 
-   
+    
     const products = await Product.find({
       categoryId: { $in: [category.id, ...listSubCategoryId] },
       status: "active",
+      price: priceFilter,
     }).sort(sortCriteria);
 
     res.status(200).json({
@@ -137,7 +154,6 @@ module.exports.slugCategory = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Internal server error",
-      error: error.message,
     });
   }
 };

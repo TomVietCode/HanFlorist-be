@@ -12,8 +12,6 @@ module.exports = (app) => {
 
   app.use(version + "/users", userRoute);
 
-  app.use(version + "/products", productRoute);
-
   app.use(version + "/cart", cartRoute);
 
   app.use(version + "/search", searchRoute);

@@ -6,29 +6,15 @@ module.exports.index = async (req, res) => {
     const productsFeature = await Product.find({
       featured: "1", 
       status: "active",
-      deleted: false,
     })
       .limit(9) 
-      .sort({ position: "desc" }); 
-
-    for (let product of productsFeature) {
-      product.priceNew = Math.round(
-        (1 - product.discountPercentage / 100) * product.price
-      ).toLocaleString();
-    }
+      .sort({ createdAt: "desc" }); 
 
     const productsNew = await Product.find({
       status: "active",
-      deleted: false,
     })
-      .limit(10) 
+      .limit(7) 
       .sort({ position: "desc" }); 
-
-    for (const product of productsNew) {
-      product.priceNew = Math.round(
-        (1 - product.discountPercentage / 100) * product.price
-      ).toLocaleString();
-    }
 
     res.status(200).json({
       message: "Home page data retrieved successfully!",
@@ -40,7 +26,7 @@ module.exports.index = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error",
-      error: error.message,
+
     });
   }
 };

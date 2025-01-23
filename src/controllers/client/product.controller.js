@@ -6,24 +6,14 @@ module.exports.index = async (req, res) => {
   try {
     const products = await Product.find({
       status: "active",
-      deleted: false,
-    }).sort({ position: "desc" });
-
-    const newProducts = products.map((item) => {
-      item.priceNew = Math.round(
-        (1 - item.discountPercentage / 100) * item.price
-      ).toLocaleString();
-      return item;
-    });
+    }).sort({ createdAt: "desc" });
 
     res.status(200).json({
-      message: "Product list retrieved successfully!",
-      data: newProducts,
+      data: products,
     });
   } catch (error) {
     res.status(500).json({
       message: "Internal server error",
-      error: error.message,
     });
   }
 };
@@ -32,7 +22,6 @@ module.exports.index = async (req, res) => {
 module.exports.detail = async (req, res) => {
   const find = {
     slug: req.params.slug,
-    deleted: false,
     status: "active",
   };
 
@@ -42,38 +31,15 @@ module.exports.detail = async (req, res) => {
       return res.status(404).json({ message: "Product not found!" });
     }
 
-    product.priceNew = Math.round(
-      (1 - product.discountPercentage / 100) * product.price
-    ).toLocaleString();
-
-    const relatedProduct = await Product.find({
-      _id: { $ne: product.id },
-      categoryId: product.categoryId,
-      deleted: false,
-      status: "active",
-    }).limit(4);
-
-    let newProducts = [];
-    if (relatedProduct.length > 0) {
-      newProducts = relatedProduct.map((item) => {
-        item.priceNew = Math.round(
-          (1 - item.discountPercentage / 100) * item.price
-        ).toLocaleString();
-        return item;
-      });
-    }
-
     res.status(200).json({
       message: "Product details retrieved successfully!",
       data: {
         product: product,
-        relatedProduct: newProducts,
       },
     });
   } catch (error) {
     res.status(500).json({
       message: "Internal server error",
-      error: error.message,
     });
   }
 };
@@ -84,19 +50,18 @@ module.exports.slugCategory = async (req, res) => {
     const category = await Category.findOne({
       slug: req.params.slugCategory,
       status: "active",
-      deleted: false,
     });
 
     if (!category) {
       return res.status(404).json({ message: "Category not found!" });
     }
 
+    //tree category
     const getSubCategory = async (parent_id) => {
       let allSub = [];
       const listSub = await Category.find({
         parent_id: parent_id,
         status: "active",
-        deleted: false,
       });
       allSub = [...listSub];
 
@@ -113,7 +78,6 @@ module.exports.slugCategory = async (req, res) => {
     const products = await Product.find({
       categoryId: { $in: [category.id, ...listSubCategoryId] },
       status: "active",
-      deleted: false,
     });
 
     res.status(200).json({
@@ -126,7 +90,6 @@ module.exports.slugCategory = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Internal server error",
-      error: error.message,
     });
   }
 };

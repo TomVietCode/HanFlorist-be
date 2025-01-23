@@ -13,7 +13,6 @@ module.exports.index = async (req, res) => {
     const regex = new RegExp(keyword, "i");
     const products = await Product.find({
       title: regex,
-      deleted: false,
       status: "active",
     });
 
@@ -39,7 +38,6 @@ module.exports.index = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Internal server error",
-      error: error.message,
     });
   }
 };

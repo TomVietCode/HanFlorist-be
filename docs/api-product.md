@@ -100,9 +100,7 @@
 
 ```json
 {
-  "data": {
-    // Data here...
-  }
+  "data": true
 }
 ```
 ---
@@ -126,6 +124,40 @@
 ```json
 {
   "message": "Không tìm thấy sản phẩm"
+}
+```
+
+## 5. **Update Multiple Product**
+
+**API:** `[PATCH] /admin/products/`
+
+### Request Body:
+
+```json
+{
+  "ids": //Products id array,
+  "updates": {
+    //Trường muốn cập nhật giá trị, ví dụ:
+    "status": "inactive"
+  }
+}
+```
+
+### Response:
+
+**Status:** `200 OK`
+
+```json
+{
+  "data": true
+}
+```
+
+**Status:** `400 Bad Request`
+
+```json
+{
+  "message": //error
 }
 ```
 

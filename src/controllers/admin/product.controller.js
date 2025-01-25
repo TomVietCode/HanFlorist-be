@@ -72,7 +72,7 @@ module.exports.createApi = async (req, res) => {
     const product = new Product(req.body)
     await product.save()
 
-    res.status(200).json({
+    res.status(201).json({
       data: product.id,
     })
   } catch (error) {

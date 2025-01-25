@@ -6,7 +6,7 @@ const requireAuth = (page) => {
 
     if (!token) {
       return res.status(401).json({
-        message: 'JWT token is required',
+        message: 'Unauthorized',
       });
     }
 
@@ -30,7 +30,7 @@ const requireAuth = (page) => {
       next();
     } catch (error) {
       return res.status(403).json({
-        message: 'Invalid or expired token',
+        message: 'Unauthorized',
       });
     }
   };

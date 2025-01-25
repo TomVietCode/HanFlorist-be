@@ -1,5 +1,5 @@
 const Product = require("../../models/products.model");
-const Category = require("../../models/product.category");
+const Category = require("../../models/category.model");
 
 // [GET] /v1/products/
 module.exports.index = async (req, res) => {

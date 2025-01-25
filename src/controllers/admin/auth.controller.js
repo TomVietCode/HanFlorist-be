@@ -4,13 +4,7 @@ const { generateToken } = require("../../helpers/jwt")
 
 module.exports.login = async (req, res) => {
   try {
-    const { username, password } = req.body
-    if (!username || !password) {
-      res.status(400).json({
-        message: "Thiếu tài khoản hoặc mật khẩu",
-      })
-      return
-    }
+    const { username = "", password = "" } = req.body
 
     const user = await User.findOne({
       username: username,
@@ -20,7 +14,7 @@ module.exports.login = async (req, res) => {
 
     if (!user) {
       res.status(404).json({
-        message: "Không tồn tại tài khoản",
+        message: "User not found",
       })
       return
     }
@@ -28,7 +22,7 @@ module.exports.login = async (req, res) => {
     const isPasswordMatch = await bcrypt.compare(password, user.password)
     if (isPasswordMatch) {
       res.status(404).json({
-        message: "Sai mật khẩu",
+        message: "Invalid username or password",
       })
       return
     }

@@ -12,7 +12,7 @@ const requireAuth = (page) => {
 
     try {
       const payload = verifyToken(token);
-      console.log(payload)
+
       if(payload.valid == false) {
         return res.status(403).json({
           message: 'Invalid or expired token',
@@ -25,7 +25,7 @@ const requireAuth = (page) => {
         });
       }
 
-      req.user = payload;
+      res.locals.user = payload.decoded;
 
       next();
     } catch (error) {

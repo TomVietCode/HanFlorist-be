@@ -166,7 +166,7 @@ module.exports.deleteApi = async (req, res) => {
   }
 }
 
-//[DELETE] /admin/products/:id
+//[PATCH] /admin/products/:id
 module.exports.updateManyApi = async (req, res) => {
   try {
     const { ids, updates } = req.body

@@ -8,8 +8,8 @@ module.exports.login = async (req, res) => {
 
     const user = await User.findOne({
       username: username,
-      deleted: false,
       status: "active",
+      role: "admin"
     })
 
     if (!user) {
@@ -21,7 +21,7 @@ module.exports.login = async (req, res) => {
 
     const isPasswordMatch = await bcrypt.compare(password, user.password)
     if (isPasswordMatch) {
-      res.status(404).json({
+      res.status(400).json({
         message: "Invalid username or password",
       })
       return
@@ -44,3 +44,4 @@ module.exports.login = async (req, res) => {
     })
   }
 }
+

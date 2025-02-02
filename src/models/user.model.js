@@ -2,20 +2,46 @@ const mongoose = require("mongoose")
 
 const userSchema = new mongoose.Schema(
   {
-    name: String,
-    email: String,
-    username: String,
-    password: String,
+    name: {
+      type: String,
+      required: [true, "Name is required"],
+    },
+    email: {
+      type: String,
+      required: [true, "Email is required"],
+      unique: true,
+    },
+    username: {
+      type: String,
+      required: [true, "Username is required"],
+      unique: true,
+      trim: true,
+      minlength: [3, "Username must have at least 3 characters"],
+      maxlength: [20, "Username must have at most 20 characters"],
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required"],
+      minlength: [6, "Password must have at least 6 characters"],
+    },
     phone: String,
     avatar: String,
     address: String,
-    role: String,
-    status: String,
-    deleted: {
-      type: Boolean,
-      default: false,
+    role: {
+      type: String,
+      required: true,
+      enum: ["admin", "client"],
+      default: "user",
     },
-    deletedAt: Date,
+    roleId: String,
+    status: {
+      type: String,
+      enum: {
+        values: ["active", "inactive", "banned", "deleted"],
+        message: "{VALUE} is not supported", 
+      },
+      default: "active",
+    },
   },
   {
     timestamps: true,
@@ -25,4 +51,3 @@ const userSchema = new mongoose.Schema(
 const User = mongoose.model("User", userSchema, "users")
 
 module.exports = User
-

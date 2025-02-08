@@ -13,5 +13,4 @@ router.patch("/:id", checkRole(["role_update"]), controller.updateApi)
 
 router.delete("/:id", checkRole(["role_delete"]), controller.deleteApi)
 
-
 module.exports = router

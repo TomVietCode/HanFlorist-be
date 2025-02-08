@@ -1,17 +1,17 @@
 const express = require("express")
 const router = express.Router()
 const controller = require("../../controllers/admin/role.controller")
+const checkRole = require("../../middlewares/checkRole.middleware")
 
-router.get("/", controller.listApi)
+router.get("/", checkRole(["role_read"]), controller.listApi)
 
-router.post("/", controller.createApi)
+router.post("/", checkRole(["role_create"]), controller.createApi)
 
-router.patch("/:id", controller.updateApi)
+router.patch("/permissions", checkRole(["role_update"]), controller.updatePermissionApi)
 
-router.delete("/:id", controller.deleteApi)
+router.patch("/:id", checkRole(["role_update"]), controller.updateApi)
 
-router.get("/permissions", controller.getPermissionApi)
+router.delete("/:id", checkRole(["role_delete"]), controller.deleteApi)
 
-router.patch("/permissions", controller.updatePermissionApi)
 
 module.exports = router

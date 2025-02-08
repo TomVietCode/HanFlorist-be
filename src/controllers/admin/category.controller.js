@@ -17,6 +17,7 @@ module.exports.listApi = async (req, res) => {
     if (status) {
       find.status = status
     }
+    
     //Search
     if (search) {
       const regex = new RegExp(search, "i")

@@ -14,4 +14,6 @@ router.delete("/:id", controller.deleteApi)
 
 router.patch("/", controller.updateManyApi)
 
+router.patch("/:id", controller.updateApi)
+
 module.exports = router

@@ -1,17 +1,17 @@
 const express = require("express")
 const router = express.Router()
-// const controller = require("../../controllers/admin/role.controller")
+const controller = require("../../controllers/admin/role.controller")
 
-// router.get("/", controller.listApi)
+router.get("/", controller.listApi)
 
-// router.post("/create", controller.createApi)
+router.post("/", controller.createApi)
 
-// router.patch("/edit/:id", controller.updateApi)
+router.patch("/:id", controller.updateApi)
 
-// router.delete("/delete/:id", controller.deleteApi)
+router.delete("/:id", controller.deleteApi)
 
-// router.get("/permissions", controller.getPermissionsApi)
+router.get("/permissions", controller.getPermissionApi)
 
-// router.patch("/permissions", controller.updatePermissionsApi)
+router.patch("/permissions", controller.updatePermissionApi)
 
 module.exports = router

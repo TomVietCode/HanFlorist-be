@@ -91,17 +91,13 @@ module.exports.getPermissionApi = async (req, res) => {
 // [PATCH] /admin/roles/permissions
 module.exports.updatePermissionApi = async (req, res) => {
   try {
-    const datas = JSON.parse(req.body)
+    const datas = req.body
 
-    for (const data of datas) {
-      await Role.updateOne(
-        {
-          _id: data.id,
-          status: { $ne: "deleted" }
-        },
-        { permissions: data.permissions }
-      )
-    }
+    const updatePromises = datas.map(async (role) => {
+      return Role.findByIdAndUpdate(role.id, { permissions: role.permissions }, { new: true });
+    });
+
+    await Promise.all(updatePromises);
 
     res.status(200).json({
       data: true,

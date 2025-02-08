@@ -2,17 +2,18 @@ const express = require("express")
 const router = express.Router()
 const controller = require("../../controllers/admin/product.controller")
 const uploadCloud = require("../../middlewares/uploadCloud.middleware")
+const checkRole = require("../../middlewares/checkRole.middleware")
 
-router.get("/", controller.listApi)
+router.get("/", checkRole(["product_read"]), controller.listApi)
 
-router.post("/", uploadCloud, controller.createApi)
+router.post("/", checkRole(["product_create"]), uploadCloud, controller.createApi)
 
-router.get("/:id", controller.getApi)
+router.get("/:id", checkRole(["product_read"]), controller.getApi)
 
-router.patch("/:id", uploadCloud, controller.updateApi)
+router.patch("/:id", checkRole(["product_update"]), uploadCloud, controller.updateApi)
 
-router.delete("/:id", controller.deleteApi)
+router.delete("/:id", checkRole(["product_delete"]), controller.deleteApi)
 
-router.patch("/", controller.updateManyApi)
+router.patch("/", checkRole(["product_update"]), controller.updateManyApi)
 
 module.exports = router

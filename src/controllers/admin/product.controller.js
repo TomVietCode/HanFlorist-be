@@ -13,7 +13,9 @@ module.exports.listApi = async (req, res) => {
       sortValue = "desc",
     } = req.query
 
-    let find = {}
+    let find = {
+      status: { $ne: "deleted" }
+    }
 
     if (status) {
       find.status = status

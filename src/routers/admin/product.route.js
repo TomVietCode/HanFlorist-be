@@ -6,11 +6,11 @@ const checkRole = require("../../middlewares/checkRole.middleware")
 
 router.get("/", checkRole(["product_read"]), controller.listApi)
 
-router.post("/", checkRole(["product_create"]), uploadCloud, controller.createApi)
+router.post("/", checkRole(["product_create"]), uploadCloud("thumbnail"), controller.createApi)
 
 router.get("/:id", checkRole(["product_read"]), controller.getApi)
 
-router.patch("/:id", checkRole(["product_update"]), uploadCloud, controller.updateApi)
+router.patch("/:id", checkRole(["product_update"]), uploadCloud("thumbnail"), controller.updateApi)
 
 router.delete("/:id", checkRole(["product_delete"]), controller.deleteApi)
 

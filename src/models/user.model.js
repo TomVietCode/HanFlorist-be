@@ -6,6 +6,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Name is required"],
     },
+    googleId: {
+      type: String, unique: true
+    },
     email: {
       type: String,
       required: [true, "Email is required"],
@@ -13,15 +16,12 @@ const userSchema = new mongoose.Schema(
     },
     username: {
       type: String,
-      required: [true, "Username is required"],
       unique: true,
+      sparse: true,
       trim: true,
-      minlength: [3, "Username must have at least 3 characters"],
-      maxlength: [20, "Username must have at most 20 characters"],
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
       minlength: [6, "Password must have at least 6 characters"],
     },
     phone: String,
@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: ["admin", "client"],
-      default: "user",
+      default: "client",
     },
     roleId: { type: mongoose.Schema.Types.ObjectId, ref: "Role", required: false },
     status: {
@@ -42,6 +42,7 @@ const userSchema = new mongoose.Schema(
       },
       default: "active",
     },
+    provider: { type: String, enum: ["local", "google"], default: "local" }
   },
   {
     timestamps: true,

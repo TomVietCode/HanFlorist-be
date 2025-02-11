@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const forgotPasswordSchema = new mongoose.Schema(
+const otpSchema = new mongoose.Schema(
   {
     email: {
       type: String,
@@ -19,6 +19,6 @@ const forgotPasswordSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const ForgotPassword = mongoose.model("ForgotPassword", forgotPasswordSchema, "forgot-passwords");
+const Otp = mongoose.model("Otp", otpSchema, "otps");
 
-module.exports = ForgotPassword;
+module.exports = Otp;

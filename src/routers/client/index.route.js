@@ -3,8 +3,11 @@ const userRoute = require("./user.route")
 const homeRoutes = require("./home.route")
 const cartRoute = require("./cart.route")
 const searchRoute = require("./search.route")
+const authRoute = require("./auth.route")
 module.exports = (app) => {
   const version = "/v1"
+
+  app.use("/auth", authRoute)
 
   app.use(version + "/", homeRoutes)
 

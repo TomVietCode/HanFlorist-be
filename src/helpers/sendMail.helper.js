@@ -10,19 +10,20 @@ module.exports.sendEmail = async (email, subject, html) => {
   })
 
   var mailOptions = {
-    from: process.env.MAIL_EMAIL,
+    from: `HanFlorist ${process.env.MAIL_EMAIL}`,
     to: email,
     subject: subject,
     html: html,
   }
 
-  await transporter.sendMail(mailOptions, function (error, info) {
+  transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error)
     } else {
       console.log("Email sent: " + info.response)
       return 
     }
+    return
   })
   
 }

@@ -1,17 +1,20 @@
 const dotenv = require("dotenv")
-const bcrypt = require("bcrypt")
 dotenv.config()
 const express = require("express")
 const database = require("./config/connectDB")
 const clientRoute = require("./routers/client/index.route")
 const adminRoute = require("./routers/admin/index.route")
 const cors = require("cors")
+const passport = require("passport")
+require("./config/passport")
+
 database.connect()
 const app = express()
 const port = process.env.PORT
-const cookieParser = require('cookie-parser');
 
-app.use(cookieParser());
+// Passport Middleware
+app.use(passport.initialize());
+
 // CORS
 app.use(cors())
 

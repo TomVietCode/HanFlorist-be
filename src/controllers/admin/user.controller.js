@@ -1,4 +1,5 @@
 const User = require("../../models/user.model")
+const bcrypt = require("bcrypt")
 
 // [GET] /admin/users
 module.exports.listApi = async (req, res) => {
@@ -95,6 +96,9 @@ module.exports.getApi = async (req, res) => {
 // [POST] /admin/users
 module.exports.createApi = async (req, res) => {
   try {
+    const { password } = req.body
+    req.body.password = await bcrypt.hash(password, 10)
+
     const newUser = new User(req.body)
     await newUser.save()
 

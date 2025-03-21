@@ -109,6 +109,14 @@
 
 **API:** `[DELETE] /admin/products/:id`
 
+### Request Body:
+
+```json
+{
+  "isHard": Boolean
+}
+```
+
 ### Response:
 
 **Status:** `200 OK`

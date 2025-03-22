@@ -79,11 +79,11 @@
 - Lấy danh sách sản phẩm.
 
 ### 2.2 Get Product Detail
-**API:** `[GET] /v1/products/detail/:slug`
-- Lấy thông tin chi tiết của sản phẩm theo `slug`.
+**API:** `[GET] /v1/products/:slug`
+- Lấy thông tin chi tiết của sản phẩm theo `slug` của product.
 
 ### 2.3 Get Products by Category
-**API:** `[GET] /v1/products/:slugCategory`
+**API:** `[GET] /v1/products/category/:slugCategory`
 - Lấy danh sách sản phẩm theo danh mục `slugCategory`.
 
 ---
@@ -97,27 +97,47 @@
 ## 4. **Cart API**
 
 ### 4.1 Get Cart Items
-**API:** `[GET] /v1/cart`
+**API:** `[GET] /v1/carts`
 - Lấy danh sách sản phẩm trong giỏ hàng.
 
 ### 4.2 Add Product to Cart
-**API:** `[POST] /v1/cart/add/:productId`
+**API:** `[POST] /v1/carts`
 - Thêm sản phẩm vào giỏ hàng theo `productId`.
 - **Request Body:**
 ```json
-{
+{ 
+  "productId": "string",
   "quantity": "number"
 }
 ```
 
 ### 4.3 Delete Product from Cart
-**API:** `[DELETE] /v1/cart/delete/:productId`
+**API:** `[DELETE] /v1/carts`
 - Xóa sản phẩm khỏi giỏ hàng theo `productId`.
+- **Request Body:**
+```json
+{ 
+  "productId": "string",
+}
+```
 
 ### 4.4 Update Product Quantity in Cart
-**API:** `[PATCH] /v1/cart/update/:productId/:newQuantity`
+**API:** `[PATCH] /v1/carts`
 - Cập nhật số lượng sản phẩm trong giỏ hàng.
-
+- **Request Body:**
+```json
+[
+    {
+        "productId": string,
+        "quantity": number
+    },
+    {
+        "productId": string,
+        "quantity": number        
+    },
+    // ...
+]
+```
 ---
 ## 5. **Search API**
 

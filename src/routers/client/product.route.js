@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const productController = require("../../controllers/client/product.controller");
+const controller = require("../../controllers/client/product.controller");
 
-router.get("/", productController.index);
+router.get("/", controller.listAPI);
 
-router.get("/:slug", productController.detail);
+router.get("/category/:slugCategory", controller.listProductCategoryAPI);
 
-router.get("/:slugCategory", productController.slugCategory);
+router.get("/:slug", controller.getAPI);
 
 module.exports = router;

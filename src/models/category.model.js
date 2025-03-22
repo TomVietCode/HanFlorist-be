@@ -9,7 +9,7 @@ const categorySchema = new mongoose.Schema({
     trim: true, 
   },
   parentId: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     default: "",
     validate: {
       validator: function(v) {
@@ -30,8 +30,8 @@ const categorySchema = new mongoose.Schema({
     slug: "title",
     unique: true, 
   },
-  createdBy: String,
-  updatedBy: String
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true });
 
 // Create Category model

@@ -1,7 +1,6 @@
 const Category = require("../../models/category.model")
-const Product = require("../../models/products.model")
-const User = require("../../models/user.model")
 const buildTree = require("../../helpers/buildTree")
+const { default: mongoose } = require("mongoose")
 //[GET] /admin/categories
 module.exports.listApi = async (req, res) => {
   try {
@@ -24,31 +23,74 @@ module.exports.listApi = async (req, res) => {
       find.title = regex
     }
 
-    const categories = await Category.find(find).sort({ [sortKey]: sortValue })
+    const categories = await Category.aggregate([
+      { $match: find },
+      //Lấy tổng số sản phẩm
+      {
+        $lookup: {
+          from: "products", 
+          localField: "_id",
+          foreignField: "categoryId",
+          as: "products",
+        },
+      },
+      //Lấy thông tin createdBy
+      {
+        $lookup: {
+          from: "users",
+          let: { createdById: { $toObjectId: "$createdBy" } }, // Ép kiểu sang ObjectId
+          pipeline: [
+            { $match: { $expr: { $eq: ["$_id", "$$createdById"] } } },
+          ],
+          as: "creatorInfo",
+        },
+      },
+      // Lấy thông tin updatedBy
+      {
+        $lookup: {
+          from: "users",
+          let: { updatedById: { $toObjectId: "$updatedBy" } }, // Ép kiểu sang ObjectId
+          pipeline: [
+            { $match: { $expr: { $eq: ["$_id", "$$updatedById"] } } },
+          ],
+          as: "updaterInfo",
+        },
+      },
+      {
+        $project: {
+          title: 1,
+          parentId: 1,
+          status: 1,
+          slug: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          totalProducts: { $size: "$products" }, 
+          createdBy: {
+            $cond: {
+              if: { $gt: [{ $size: "$creatorInfo" }, 0] }, 
+              then: {
+                _id: "$createdBy",
+                name: { $arrayElemAt: ["$creatorInfo.name", 0] },
+              },
+              else: null,
+            },
+          },
+          updatedBy: {
+            $cond: {
+              if: { $gt: [{ $size: "$updaterInfo" }, 0] }, 
+              then: {
+                _id: "$updatedBy",
+                name: { $arrayElemAt: ["$updaterInfo.name", 0] },
+              },
+              else: null,
+            },
+          },
+        },
+      },
+      { $sort: { [sortKey]: sortValue === "desc" ? -1 : 1 } }, 
+    ]);
 
-    // Tập hợp tất cả ID của createdBy và updatedBy
-    const userIds = [
-      ...new Set(
-        categories.flatMap((category) => [category.createdBy, category.updatedBy].filter(Boolean))
-      ),
-    ]
-
-    const users = await User.find({ _id: { $in: userIds } })
-
-    // Tạo map để dễ tra cứu user theo ID
-    const userMap = {}
-    users.forEach((user) => {
-      userMap[user.id] = user.name
-    })
-
-    // Thêm thông tin người tạo và cập nhật vào từng danh mục
-    const newCategories = categories.map((category) => ({
-      ...category._doc, // Dữ liệu gốc của danh mục
-      creatorName: userMap[category.createdBy] || "",
-      updaterName: userMap[category.updatedBy] || "",
-    }))
-
-    const categoriesTree = buildTree(newCategories)
+    const categoriesTree = buildTree(categories)
 
     res.status(200).json({
       data: categoriesTree,
@@ -83,10 +125,78 @@ module.exports.createApi = async (req, res) => {
 module.exports.getApi = async (req, res) => {
   const { id } = req.params
   try {
-    const category = await Category.findOne({
-      _id: id,
-      status: { $ne: "deleted" },
-    })
+    const categories = await Category.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(id) } },
+      // lấy danh sách sản phẩm
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "categoryId",
+          as: "products",
+        },
+      },
+      //đếm danh mục con
+      {
+        $lookup: {
+          from: "categories", 
+          localField: "_id",
+          foreignField: "parentId",
+          as: "subcategories",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "createdBy",
+          foreignField: "_id",
+          as: "creatorInfo",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "updatedBy",
+          foreignField: "_id",
+          as: "updaterInfo",
+        },
+      },
+      {
+        $project: {
+          title: 1,
+          parentId: 1,
+          description: 1,
+          status: 1,
+          slug: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          products: 1, // Danh sách sản phẩm
+          totalSubcategories: { $size: "$subcategories" }, // Tổng số danh mục con
+          createdBy: {
+            $cond: {
+              if: { $gt: [{ $size: "$creatorInfo" }, 0] },
+              then: {
+                id: "$createdBy",
+                name: { $arrayElemAt: ["$creatorInfo.name", 0] },
+              },
+              else: null,
+            },
+          },
+          updatedBy: {
+            $cond: {
+              if: { $gt: [{ $size: "$updaterInfo" }, 0] },
+              then: {
+                id: "$updatedBy",
+                name: { $arrayElemAt: ["$updaterInfo.name", 0] },
+              },
+              else: null,
+            },
+          },
+        },
+      },
+    ]);
+
+    const category = categories[0]
 
     res.status(200).json({
       data: category

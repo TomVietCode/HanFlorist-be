@@ -4,20 +4,22 @@ module.exports = function buildTree(categories) {
 
   for (let i = 0; i < categories.length; i++) {
     const category = categories[i];
+    const categoryId = category._id.toString(); // Chuyển _id thành string
 
-    if (!mapChildren.get(`${category._id}`)) {
-      mapChildren.set(`${category._id}`, []);
+    if (!mapChildren.has(categoryId)) {
+      mapChildren.set(categoryId, []);
     }
 
-    category.children = mapChildren.get(`${category._id}`);
+    category.children = mapChildren.get(categoryId);
 
     if (!category.parentId) {
       categoriesTree.push(category);
     } else {
-      const children = mapChildren.get(category.parentId);
-      children ? children.push(category) : mapChildren.set(category.parentId, [category]);
+      const parentId = category.parentId.toString(); // Chuyển parentId thành string
+      const children = mapChildren.get(parentId);
+      children ? children.push(category) : mapChildren.set(parentId, [category]);
     }
   }
 
   return categoriesTree;
-}
+};

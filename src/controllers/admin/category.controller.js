@@ -1,6 +1,8 @@
 const Category = require("../../models/category.model")
+const Product = require("../../models/products.model");
 const buildTree = require("../../helpers/buildTree")
 const { default: mongoose } = require("mongoose")
+
 //[GET] /admin/categories
 module.exports.listApi = async (req, res) => {
   try {
@@ -9,98 +11,56 @@ module.exports.listApi = async (req, res) => {
       search,
       sortKey = "createdAt",
       sortValue = "desc",
-    } = req.query
+    } = req.query;
 
-    let find = {}
-
-    if (status) {
-      find.status = status
+    // Điều kiện lọc
+    let find = {};
+    if (status) find.status = status
+    if (search) {
+      const regex = new RegExp(search, "i");
+      find.title = regex;
     }
     
-    //Search
-    if (search) {
-      const regex = new RegExp(search, "i")
-      find.title = regex
-    }
+    const categories = await Category.find(find)
+      .populate("createdBy", "_id name") 
+      .populate("updatedBy", "_id name")
+      .sort({ [sortKey]: sortValue === "desc" ? -1 : 1 })
+      .lean();
 
-    const categories = await Category.aggregate([
-      { $match: find },
-      //Lấy tổng số sản phẩm
-      {
-        $lookup: {
-          from: "products", 
-          localField: "_id",
-          foreignField: "categoryId",
-          as: "products",
-        },
-      },
-      //Lấy thông tin createdBy
-      {
-        $lookup: {
-          from: "users",
-          let: { createdById: { $toObjectId: "$createdBy" } }, // Ép kiểu sang ObjectId
-          pipeline: [
-            { $match: { $expr: { $eq: ["$_id", "$$createdById"] } } },
-          ],
-          as: "creatorInfo",
-        },
-      },
-      // Lấy thông tin updatedBy
-      {
-        $lookup: {
-          from: "users",
-          let: { updatedById: { $toObjectId: "$updatedBy" } }, // Ép kiểu sang ObjectId
-          pipeline: [
-            { $match: { $expr: { $eq: ["$_id", "$$updatedById"] } } },
-          ],
-          as: "updaterInfo",
-        },
-      },
-      {
-        $project: {
-          title: 1,
-          parentId: 1,
-          status: 1,
-          slug: 1,
-          createdAt: 1,
-          updatedAt: 1,
-          totalProducts: { $size: "$products" }, 
-          createdBy: {
-            $cond: {
-              if: { $gt: [{ $size: "$creatorInfo" }, 0] }, 
-              then: {
-                _id: "$createdBy",
-                name: { $arrayElemAt: ["$creatorInfo.name", 0] },
-              },
-              else: null,
-            },
-          },
-          updatedBy: {
-            $cond: {
-              if: { $gt: [{ $size: "$updaterInfo" }, 0] }, 
-              then: {
-                _id: "$updatedBy",
-                name: { $arrayElemAt: ["$updaterInfo.name", 0] },
-              },
-              else: null,
-            },
-          },
-        },
-      },
-      { $sort: { [sortKey]: sortValue === "desc" ? -1 : 1 } }, 
+    // Tính tổng sản phẩm cho từng danh mục
+    const categoryIds = categories.map(cat => cat._id);
+    const productCounts = await Product.aggregate([
+      { $match: { categoryId: { $in: categoryIds }, status: "active" } },
+      { $group: { _id: "$categoryId", totalProducts: { $sum: 1 } } },
     ]);
 
-    const categoriesTree = buildTree(categories)
+    const productCountMap = new Map(productCounts.map(item => [item._id.toString(), item.totalProducts]));
+
+    // Thêm totalProducts vào từng danh mục và tính tổng cho danh mục cha
+    const addProductCount = (category) => {
+      let total = productCountMap.get(category._id.toString()) || 0; 
+      if (category.children && category.children.length > 0) {
+        category.children.forEach(child => {
+          total += addProductCount(child); 
+        });
+      }
+      category.totalProducts = total;
+      return total;
+    };
+
+    const categoriesTree = buildTree(categories);
+
+    categoriesTree.forEach(category => addProductCount(category));
 
     res.status(200).json({
       data: categoriesTree,
-    })
+    });
   } catch (error) {
-    res.status(500).json({
+    res.status(400).json({
       message: error.message,
-    })
+    });
   }
-}
+};
 
 //[POST] /admin/categories
 module.exports.createApi = async (req, res) => {

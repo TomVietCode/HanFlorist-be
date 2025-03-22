@@ -7,7 +7,7 @@ router.get("/", controller.index)
 
 router.post("/add/:productId", controller.addPost)
 
-router.get("/delete/:productId", controller.delete)
+router.delete("/delete/:productId", controller.delete)
 
 router.get("/update/:productId/:newQuantity", controller.update)
 

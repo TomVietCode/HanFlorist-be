@@ -4,7 +4,7 @@ const checkRole = (permissions = []) => {
   return async (req, res, next) => {
     try {
       const userId = res.locals.user.sub
-      const user = await User.findById(userId).select("roleId").populate("roleId", "permissions")
+      const user = await User.findById(userId).select("roleId").populate("roleId", "permissions") 
       const userPermissions = user.roleId.permissions || []
 
       const hasPermission = permissions.some((perm) => userPermissions.includes(perm))
@@ -14,7 +14,7 @@ const checkRole = (permissions = []) => {
       }
       next()
     } catch (error) {
-      return res.status(500).json({ message: "Internal Server Error" })
+      return res.status(500).json({ message: error.message })
     }
   }
 }

@@ -3,12 +3,12 @@ const router = express.Router()
 
 const controller = require("../../controllers/client/cart.controller")
 
-router.get("/", controller.index)
+router.post("/", controller.addProductToCartAPI)
 
-router.post("/add/:productId", controller.addPost)
+router.get("/", controller.getCartAPI)
 
-router.delete("/delete/:productId", controller.delete)
+router.patch("/", controller.updateProductQuantitiesAPI)
 
-router.get("/update/:productId/:newQuantity", controller.update)
+router.delete("/", controller.removeProductFromCartAPI)
 
 module.exports = router

@@ -1,182 +1,182 @@
 const Cart = require("../../models/cart.model");
 const Product = require("../../models/products.model");
 
-// [GET] /v1/cart
-module.exports.index = async (req, res) => {
+// [POST] /v1/carts/
+module.exports.addProductToCartAPI = async (req, res) => {
   try {
-    const cartId = req.cookies.cartId;
+    let { productId, quantity } = req.body;
+    const userId = res.locals.user.sub  
+    quantity = parseInt(quantity)
+  
+    // Kiểm tra quantity hợp lệ
+    if (isNaN(quantity) || quantity <= 0) {
+      throw new Error("Invalid quantity!")
+    }
+    const product = await Product.findById(productId)
+    if(!product) throw new Error("Product not found")
+    if(quantity > product.stock) throw new Error("Product stock not enough")
+    
+    let cart = await Cart.findOne({ userId });
+    if (!cart) {
+      const subTotal = product.price * quantity * (1 - product.discountPercentage / 100)
+      cart = new Cart({
+        userId,
+        products: [ { productId, quantity, subTotal } ],
+      })
+    }
 
-    const cart = await Cart.findOne({ _id: cartId });
+    const existingItem = cart.products.find(item => item.productId.toString() === productId.toString())
+    if(existingItem) {
+      existingItem.quantity += quantity
+      if(existingItem.quantity > product.stock) throw new Error("Product stock not enough")
+
+      existingItem.subTotal = product.price * existingItem.quantity * (1 - product.discountPercentage / 100)
+    } else {
+      const subTotal = product.price * quantity * (1 - product.discountPercentage / 100);
+      cart.products.push({ productId, quantity, subTotal });
+    }
+
+    cart.totalAmount = cart.products.reduce((sum, item) => sum + item.subTotal, 0);
+    console.log(cart)
+    await cart.save()
+
+    res.status(200).json({
+      data: true,
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error.message,
+    });
+  }
+};
+
+// [GET] /v1/carts
+module.exports.getCartAPI = async (req, res) => {
+  try {
+    const userId = res.locals.user.sub
+
+    const cart = await Cart.findOne({ userId }).populate({
+      path: "products.productId",
+      select: "title price discountPercentage thumbnail stock",
+    })
     if (!cart) {
       return res.status(404).json({ message: "Cart not found!" });
     }
 
-    // Nếu giỏ hàng trống
-    if (cart.products.length === 0) {
-      return res.status(200).json({
-        message: "Cart is empty!",
-        data: { products: [], totalPrice: 0 },
-      });
-    }
-
-    let cartTotalPrice = 0;
-    for (const product of cart.products) {
-      const productInfo = await Product.findOne({
-        _id: product.product_id,
-      }).select("thumbnail title price discountPercentage slug");
-
-      if (!productInfo) {
-        return res.status(404).json({ message: "Product not found!" });
-      }
-
-      const discountedPrice = Math.round(
-        (1 - productInfo.discountPercentage / 100) * productInfo.price
-      );
-      product.totalPrice = discountedPrice * product.quantity;
-      cartTotalPrice += product.totalPrice;
-      productInfo.discountedPrice = discountedPrice.toLocaleString();
-      product.productInfo = productInfo;
-    }
-
-    cart.totalPrice = cartTotalPrice;
-
     res.status(200).json({
-      message: "Cart retrieved successfully!",
       data: cart,
     });
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error",
       error: error.message,
     });
   }
 };
 
-// [POST] /v1/cart/add/:productId
-module.exports.addPost = async (req, res) => {
+// [PATCH] /v1/carts/
+module.exports.updateProductQuantitiesAPI = async (req, res) => {
   try {
-    const productId = req.params.productId;
-    const cartId = req.cookies.cartId;
-    const quantity = parseInt(req.body.quantity);
+    const userId = res.locals.user.sub;
+    const updates = req.body; // [{ productId, quantity }, ...]
 
-    // Kiểm tra quantity hợp lệ
-    if (isNaN(quantity) || quantity <= 0) {
-      return res.status(400).json({ message: "Invalid quantity!" });
+    if (!Array.isArray(updates) || updates.length === 0) {
+      throw new Error("Invalid updates: must provide an array of { productId, quantity }");
     }
 
-    const cart = await Cart.findOne({ _id: cartId });
+    let cart = await Cart.findOne({ userId });
     if (!cart) {
-      return res.status(404).json({ message: "Cart not found!" });
+      throw new Error("Cart not found");
     }
 
-    const productInCart = cart.products.find(
-      (item) => item.product_id === productId
-    );
+    // Lấy thông tin sản phẩm từ database
+    const productIds = updates.map((update) => update.productId);
+    const products = await Product.find({ _id: { $in: productIds } });
+    const productMap = products.reduce((map, product) => {
+      map[product._id.toString()] = product;
+      return map;
+    }, {});
 
-    if (productInCart) {
-      const newQuantity = productInCart.quantity + quantity;
+    // Cập nhật số lượng cho từng sản phẩm trong giỏ
+    for (const update of updates) {
+      const { productId, quantity } = update;
 
-      await Cart.updateOne(
-        {
-          _id: cartId,
-          "products.product_id": productId,
-        },
-        {
-          $set: { "products.$.quantity": newQuantity },
-        }
-      );
-    } else {
-      const objectProduct = {
-        product_id: productId,
-        quantity: quantity,
-      };
-
-      await Cart.updateOne(
-        {
-          _id: cartId,
-        },
-        {
-          $push: { products: objectProduct },
-        }
-      );
-    }
-
-    res.status(200).json({
-      message: "Product added to cart successfully!",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "Internal server error",
-      error: error.message,
-    });
-  }
-};
-
-// [DELETE] /v1/cart/delete/:productId
-module.exports.delete = async (req, res) => {
-  try {
-    const cartId = req.cookies.cartId;
-    const productId = req.params.productId;
-
-    const cart = await Cart.findOne({ _id: cartId });
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found!" });
-    }
-
-    await Cart.updateOne(
-      {
-        _id: cartId,
-      },
-      {
-        $pull: { products: { product_id: productId } },
+      const parsedQuantity = parseInt(quantity);
+      if (isNaN(parsedQuantity) || parsedQuantity <= 0) {
+        throw new Error(`Invalid quantity for product ${productId}`);
       }
-    );
 
-    res.status(200).json({
-      message: "Product removed from cart successfully!",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "Internal server error",
-      error: error.message,
-    });
-  }
-};
-
-// [PUT] /v1/cart/update/:productId/:newQuantity
-module.exports.update = async (req, res) => {
-  try {
-    const cartId = req.cookies.cartId;
-    const productId = req.params.productId;
-    const newQuantity = parseInt(req.params.newQuantity);
-
-    // Kiểm tra newQuantity hợp lệ
-    if (isNaN(newQuantity) || newQuantity <= 0) {
-      return res.status(400).json({ message: "Invalid quantity!" });
-    }
-
-    const cart = await Cart.findOne({ _id: cartId });
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found!" });
-    }
-
-    await Cart.updateOne(
-      {
-        _id: cartId,
-        "products.product_id": productId,
-      },
-      {
-        $set: { "products.$.quantity": newQuantity },
+      const product = productMap[productId.toString()];
+      if (!product || product.status === "inactive" || product.status === "deleted") {
+        throw new Error(`Product not found: ${productId}`);
       }
-    );
+
+      if (parsedQuantity > product.stock) {
+        throw new Error(`Not enough stock for product ${product.title} (ID: ${productId})`);
+      }
+
+      // Tìm item trong giỏ hàng
+      const item = cart.products.find(
+        (p) => p.productId.toString() === productId.toString()
+      );
+      if (!item) {
+        throw new Error(`Product ${productId} not found in cart`);
+      }
+
+      item.quantity = parsedQuantity;
+      item.subTotal = product.price * item.quantity * (1 - product.discountPercentage / 100);
+    }
+
+    cart.totalAmount = cart.products.reduce((sum, item) => sum + item.subTotal, 0);
+
+    await cart.save();
 
     res.status(200).json({
-      message: "Cart updated successfully!",
+      data: true,
     });
   } catch (error) {
-    res.status(500).json({
-      message: "Internal server error",
+    res.status(400).json({
       error: error.message,
     });
   }
 };
+
+// [DELETE] /v1/carts/
+module.exports.removeProductFromCartAPI = async (req, res) => {
+  try {
+    const userId = res.locals.user.sub;
+    const { productId } = req.body; 
+
+    if (!productId) {
+      throw new Error("Product ID is required");
+    }
+
+    let cart = await Cart.findOne({ userId });
+    if (!cart) {
+      throw new Error("Cart not found");
+    }
+
+    // Tìm sản phẩm trong giỏ hàng
+    const productIndex = cart.products.findIndex(
+      (item) => item.productId.toString() === productId.toString()
+    );
+    if (productIndex === -1) {
+      throw new Error(`Product ${productId} not found in cart`);
+    }
+
+    // Xóa sản phẩm khỏi mảng products
+    cart.products.splice(productIndex, 1);
+
+    cart.totalAmount = cart.products.reduce((sum, item) => sum + item.subTotal, 0);
+
+    await cart.save();
+
+    res.status(200).json({
+      data: true,
+    });
+  } catch (error) {
+    res.status(400).json({
+      error: error.message,
+    });
+  }
+};
+

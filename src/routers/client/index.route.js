@@ -4,6 +4,7 @@ const homeRoutes = require("./home.route")
 const cartRoute = require("./cart.route")
 const searchRoute = require("./search.route")
 const authRoute = require("./auth.route")
+const requireAuth = require("../../middlewares/auth.middleware")
 module.exports = (app) => {
   const version = "/v1"
 
@@ -15,7 +16,7 @@ module.exports = (app) => {
 
   app.use(version + "/users", userRoute);
 
-  app.use(version + "/carts", cartRoute);
+  app.use(version + "/carts", requireAuth("client"), cartRoute);
 
   app.use(version + "/search", searchRoute);
 }

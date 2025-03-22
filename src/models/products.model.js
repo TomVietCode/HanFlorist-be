@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    categoryId: String,
+    categoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
     featured: {
       type: Boolean,
       default: false,
@@ -47,8 +47,8 @@ const productSchema = new mongoose.Schema(
       slug: "title",
       unique: true,
     },
-    createdBy: String,
-    updatedBy: String,
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
   },
   { timestamps: true }
 )

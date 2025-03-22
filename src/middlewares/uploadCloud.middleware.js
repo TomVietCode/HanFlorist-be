@@ -7,7 +7,7 @@ const uploadCloud = (field) => {
         console.error("Upload error:", err)
         return res.status(500).json({ message: "Error uploading image", error: err.message })
       }
-  
+
       if (req.file && req.file.path) {
         req.body[field] = req.file.path
       }

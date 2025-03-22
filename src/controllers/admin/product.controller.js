@@ -14,7 +14,7 @@ module.exports.listApi = async (req, res) => {
     } = req.query
 
     let find = {
-      status: { $ne: "deleted" }
+      status: { $ne: "deleted" },
     }
 
     if (status) {
@@ -30,36 +30,19 @@ module.exports.listApi = async (req, res) => {
       .limit(limit)
       .skip((page - 1) * limit)
       .sort({ [sortKey]: sortValue })
-
-    // Tập hợp tất cả ID của createdBy và updatedBy
-    const userIds = [
-      ...new Set(
-        products.flatMap((product) => [product.createdBy, product.updatedBy].filter(Boolean))
-      ),
-    ]
-
-    const users = await User.find({ _id: { $in: userIds } })
-
-    // Tạo map để dễ tra cứu user theo ID
-    const userMap = {}
-    users.forEach((user) => {
-      userMap[user.id] = user.name
-    })
-
-    // Thêm thông tin người tạo và cập nhật vào từng sản phẩm
-    const newProducts = products.map((product) => ({
-      ...product._doc, // Dữ liệu gốc của sản phẩm
-      creatorName: userMap[product.createdBy] || "",
-      updaterName: userMap[product.updatedBy] || "",
-    }))
+      .populate([
+        { path: "categoryId", select: "title" },
+        { path: "createdBy", select: "name" },
+        { path: "updatedBy", select: "name" },
+      ])
 
     res.status(200).json({
-      data: newProducts,
+      data: products,
       paging: { page: page, limit: limit },
       filter: req.query,
     })
   } catch (error) {
-    res.status(500).json({
+    res.status(400).json({
       message: error.message,
     })
   }
@@ -91,8 +74,11 @@ module.exports.getApi = async (req, res) => {
     const product = await Product.findOne({
       _id: id,
       status: { $ne: "deleted" },
-    })
-
+    }).populate([
+      { path: "categoryId", select: "title" },
+      { path: "createdBy", select: "name" },
+      { path: "updatedBy", select: "name" },
+    ])
     res.status(200).json({
       data: product,
     })
@@ -102,7 +88,7 @@ module.exports.getApi = async (req, res) => {
         message: "Product not found (Invalid Id)",
       })
     }
-    res.status(500).json({
+    res.status(400).json({
       message: error.message,
     })
   }
@@ -111,12 +97,18 @@ module.exports.getApi = async (req, res) => {
 //[PATCH] /admin/products/:id
 module.exports.updateApi = async (req, res) => {
   const { id } = req.params
+  const { status } = req.body
   try {
     req.body.updatedBy = res.locals.user.sub
+
+    const product = await Product.findById(id)
+
+    if (product.status === "deleted" && status !== "active") {
+      throw new Error("Product not found!")
+    }
     await Product.updateOne(
       {
         _id: id,
-        status: { $ne: "deleted" },
       },
       req.body,
       { runValidators: true }
@@ -130,7 +122,7 @@ module.exports.updateApi = async (req, res) => {
         message: "Product not found (Invalid Id)",
       })
     }
-    res.status(500).json({
+    res.status(400).json({
       message: error.message,
     })
   }
@@ -173,19 +165,16 @@ module.exports.updateManyApi = async (req, res) => {
   try {
     const { ids, updates } = req.body
 
-    await Product.updateMany(
-      { _id: { $in: ids }, status: { $ne: "deleted" } },
-      { $set: updates }
-    );
+    await Product.updateMany({ _id: { $in: ids }, status: { $ne: "deleted" } }, { $set: updates })
 
-    res.status(200).json({ data: true });
+    res.status(200).json({ data: true })
   } catch (error) {
     if (error.name === "CastError" && error.kind === "ObjectId") {
       return res.status(400).json({
         message: "Invalid Ids",
       })
     }
-    res.status(500).json({
+    res.status(400).json({
       message: error.message,
     })
   }

@@ -26,10 +26,13 @@ module.exports.listAPI = async (req, res) => {
       .select("title price discountPercentage thumbnail stock createdAt slug categoryId")
       .skip((page - 1) * limit)
 
+    const totalProduct = await Product.countDocuments(filter)
+
     res.status(200).json({
       data: products,
       paging: { page: page, limit: limit },
       filter: req.query,
+      totalProduct
     })
   } catch (error) {
     res.status(400).json({
@@ -93,9 +96,8 @@ module.exports.listProductCategoryAPI = async (req, res) => {
     };
 
     const categoryIds = await getSubCategories(category._id);
-    console.log(categoryIds)
     // Xây dựng điều kiện lọc
-    const filter = { categoryId: { $in: categoryIds } };
+    const filter = { status: "active", categoryId: { $in: categoryIds } };
     if (minPrice || maxPrice) {
       filter.price = {};
       if (minPrice) filter.price.$gte = parseFloat(minPrice);
@@ -108,11 +110,13 @@ module.exports.listProductCategoryAPI = async (req, res) => {
       .limit(parseInt(limit))
       .skip((page - 1) * limit)
 
+    const totalProduct = await Product.countDocuments(filter)
 
     res.status(200).json({
       data: products,
       paging: { page: page, limit: limit },
       filter: req.query,
+      totalProduct
     })  
   } catch (error) {
     res.status(400).json({

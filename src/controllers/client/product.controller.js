@@ -49,7 +49,7 @@ module.exports.getAPI = async (req, res) => {
   }
 
   try {
-    const product = await Product.findOne(find).select("-createdBy -updatedBy -updatedAt")
+    const product = await Product.findOne(find).select("-createdBy -updatedBy -updatedAt").populate("categoryId", "title")
     if (!product) {
       return res.status(404).json({ message: "Product not found!" })
     }

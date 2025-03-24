@@ -96,9 +96,17 @@ module.exports.getApi = async (req, res) => {
 // [POST] /admin/users
 module.exports.createApi = async (req, res) => {
   try {
-    const { password } = req.body
+    const { password, username, email } = req.body
     req.body.password = await bcrypt.hash(password, 10)
+    req.body.role = "admin"
 
+    const user = await User.findOne({
+      $or: [
+        { username },
+        { email }
+      ]
+    })
+    if(user) throw new Error("Email or username is already exists")
     const newUser = new User(req.body)
     await newUser.save()
 

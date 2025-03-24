@@ -18,26 +18,22 @@ module.exports.addProductToCartAPI = async (req, res) => {
     
     let cart = await Cart.findOne({ userId });
     if (!cart) {
-      const subTotal = product.price * quantity * (1 - product.discountPercentage / 100)
-      cart = new Cart({
-        userId,
-        products: [ { productId, quantity, subTotal } ],
-      })
+      throw new Error("Cart not found")
     }
 
     const existingItem = cart.products.find(item => item.productId.toString() === productId.toString())
+
     if(existingItem) {
       existingItem.quantity += quantity
       if(existingItem.quantity > product.stock) throw new Error("Product stock not enough")
 
       existingItem.subTotal = product.price * existingItem.quantity * (1 - product.discountPercentage / 100)
     } else {
-      const subTotal = product.price * quantity * (1 - product.discountPercentage / 100);
+      const subTotal = product.price * quantity * (1 - (product.discountPercentage || 0) / 100);
       cart.products.push({ productId, quantity, subTotal });
     }
 
     cart.totalAmount = cart.products.reduce((sum, item) => sum + item.subTotal, 0);
-    console.log(cart)
     await cart.save()
 
     res.status(200).json({

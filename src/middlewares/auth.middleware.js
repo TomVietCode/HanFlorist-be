@@ -3,12 +3,16 @@ const { verifyToken } = require("../helpers/jwt")
 const requireAuth = (page) => {
   return (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1]
-
-    if (!token) {
+    
+    if (page === "admin" && !token) {
       return res.status(401).json({
         message: "Unauthorized",
-      })
+      });
     }
+
+    if (!token) {
+      return next();
+    } 
 
     try {
       const payload = verifyToken(token)

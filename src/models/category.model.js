@@ -34,7 +34,6 @@ const categorySchema = new mongoose.Schema({
   updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true });
 
-// Create Category model
 const Category = mongoose.model("Category", categorySchema, "categories");
 
 module.exports = Category;

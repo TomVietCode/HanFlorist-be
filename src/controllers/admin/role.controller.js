@@ -54,14 +54,15 @@ module.exports.updateApi = async (req, res) => {
   }
 }
 
-// [DELETE] /admin/roles/delete/:id
+// [DELETE] /admin/roles/:id
 module.exports.deleteApi = async (req, res) => {
   try {
     const id = req.params.id
 
     const role = await Role.findOne({ _id: id })
     if (!role ) throw new Error("Data not found")
-
+    
+    await Role.findByIdAndUpdate(id)
     res.status(200).json({
       data: true,
     })
@@ -92,7 +93,7 @@ module.exports.getPermissionApi = async (req, res) => {
 module.exports.updatePermissionApi = async (req, res) => {
   try {
     const datas = req.body
-
+    console.log(datas)
     const updatePromises = datas.map(async (role) => {
       return Role.findByIdAndUpdate(role.id, { permissions: role.permissions }, { new: true });
     });

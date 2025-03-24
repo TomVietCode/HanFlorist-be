@@ -22,7 +22,6 @@ const requireAuth = (page) => {
           message: "Invalid or expired token",
         })
       }
-
       if (page === "admin" && payload.decoded.role !== "admin") {
         return res.status(403).json({
           message: "You do not have permission to access the admin page",

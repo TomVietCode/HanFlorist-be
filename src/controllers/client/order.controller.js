@@ -2,6 +2,7 @@ const Cart = require("../../models/cart.model");
 const Product = require("../../models/products.model");
 const Order = require("../../models/order.model");
 const { generateRandomNumber } = require("../../helpers/generateRandom.helper");
+const { processVNPayPayment, verifyVNPayResponse } = require("../../helpers/vnPayService");
 
 // [POST] /v1/orders
 module.exports.createOrderAPI = async (req, res) => {
@@ -88,6 +89,16 @@ module.exports.createOrderAPI = async (req, res) => {
       await Cart.deleteOne({ userId });
     }
 
+    if (paymentMethod === "VNPay") {
+      const { paymentUrl, qrCode } = await processVNPayPayment(order);
+      return res.status(200).json({
+        data: {
+          orderId: order._id,
+          paymentUrl, // URL để debug hoặc fallback
+          qrCode,     // Mã QR dạng base64
+        },
+      });
+    }
     res.status(201).json({
       data: order._id,
     });
@@ -98,6 +109,25 @@ module.exports.createOrderAPI = async (req, res) => {
   }
 }
 
+// [GET] /v1/orders/vnpay-return
+module.exports.handleVNPayReturn = async (req, res) => {
+  const vnp_Params = { ...req.query };
+
+  if (!verifyVNPayResponse(vnp_Params)) {
+    return res.status(400).json({ error: "Invalid signature" });
+  }
+
+  const order = await Order.findOne({ orderCode: vnp_Params.vnp_TxnRef });
+  if (vnp_Params.vnp_ResponseCode === "00") {
+    order.paymentStatus = "paid";
+    await order.save();
+    res.redirect("http://localhost:3000/order-success?orderId=" + order._id);
+  } else {
+    order.paymentStatus = "failed";
+    await order.save();
+    res.redirect("http://localhost:3000/order-failed?orderId=" + order._id);
+  }
+};
 // [GET] /v1/orders/:orderId
 module.exports.getAPI = async (req, res) => {
   try {
@@ -149,3 +179,4 @@ module.exports.listAPI = async (req, res) => {
     });
   }
 }
+

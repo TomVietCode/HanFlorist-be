@@ -3,10 +3,10 @@ const QRCode = require("qrcode");
 
 // Cấu hình VNPay Sandbox
 const vnp_Config = {
-  vnp_TmnCode: process.env.VNP_TMNCODE, // Thay bằng mã merchant của bạn
-  vnp_HashSecret: process.env.VNP_HASHSECRET, // Thay bằng khóa bí mật
+  vnp_TmnCode: process.env.VNP_TMNCODE, 
+  vnp_HashSecret: process.env.VNP_HASHSECRET, 
   vnp_Url: process.env.VNP_URL || "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
-  vnp_ReturnUrl: "http://yourdomain.com/vnpay-return",
+  vnp_ReturnUrl: "http://localhost:3001/v1/orders/vnpay-return",
 };
 
 // Hàm tạo URL thanh toán VNPay
@@ -58,8 +58,25 @@ const processVNPayPayment = async (order) => {
   return { paymentUrl, qrCode };
 };
 
+const verifyVNPayResponse = (params) => {
+  const secureHash = params.vnp_SecureHash;
+  delete params.vnp_SecureHash;
+  delete params.vnp_SecureHashType;
+
+  const sortedParams = Object.keys(params).sort().reduce((obj, key) => {
+    obj[key] = params[key];
+    return obj;
+  }, {});
+  const signData = new URLSearchParams(sortedParams).toString();
+  const hmac = crypto.createHmac("sha512", vnp_Config.vnp_HashSecret);
+  const checkHash = hmac.update(signData).digest("hex");
+
+  return checkHash === secureHash;
+};
+
 module.exports = {
   processVNPayPayment,
-  createVNPayPaymentUrl, // Export riêng nếu cần dùng độc lập
-  generateQRCode,       // Export riêng nếu cần dùng độc lập
-};
+  createVNPayPaymentUrl, 
+  generateQRCode,  
+  verifyVNPayResponse     
+}

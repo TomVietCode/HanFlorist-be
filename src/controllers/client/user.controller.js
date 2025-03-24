@@ -3,9 +3,8 @@ const User = require("../../models/user.model");
 // [GET] /v1/users/profile
 module.exports.profile = async (req, res) => {
   try {
-    const userId = req.user.userId; 
+    const userId = res.locals.user.sub; 
 
-    
     const user = await User.findById(userId).select("-password"); 
 
     if (!user) {

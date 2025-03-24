@@ -8,11 +8,11 @@ const categorySchema = z.object({
     .min(1, "Title cannot be empty"),
   parentId: z
     .string()
-    .optional()
+    .nullable()
     .refine((val) => !val || mongoose.Types.ObjectId.isValid(val), {
       message: "parentId must be a valid ObjectId or empty",
     })
-    .default(""),
+    .default(null),
   description: z.string().optional(),
   thumbnail: z.string().optional(),
   status: z

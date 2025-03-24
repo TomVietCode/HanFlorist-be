@@ -150,5 +150,27 @@
   "slug": "Set-hoa-de-ban5",
   "__v": 0,
   "updatedBy": "6698d6467f265f213ced6910"
-}
+},
+
+{
+  "title": "Wedding Car - Hoa mix tone xanh trắng",
+  "categoryId": "670c02d75b371fe9c4880985",
+  "featured": "0",
+  "description": "",
+  "price": 450000,
+  "discountPercentage": 0,
+  "stock": 10,
+  "thumbnail": "https://content.pancake.vn/2-25/s1800x1650/fwebp0/2025/1/3/d448f3bebb623ee35b15a604d3a56f1216399b93.png",
+  "status": "active",
+  "createdBy": "6698d6467f265f213ced6910",
+  "deleted": false,
+  "createdAt": {
+    "$date": "2025-01-10T07:24:07.499Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-10T07:24:07.499Z"
+  },
+  "slug": "Wedding-car-hoa-mix-tone-xanh-trang",
+  "__v": 0
+},
 ]

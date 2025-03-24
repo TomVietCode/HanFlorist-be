@@ -10,10 +10,10 @@ const categorySchema = new mongoose.Schema({
   },
   parentId: {
     type: mongoose.Schema.Types.ObjectId,
-    default: "",
+    default: null,
     validate: {
       validator: function(v) {
-        return v === "" || mongoose.Types.ObjectId.isValid(v);
+        return v === null || mongoose.Types.ObjectId.isValid(v);
       },
       message: props => `${props.value} is not a valid parentId!`,
     },

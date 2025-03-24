@@ -31,6 +31,7 @@ const OrderSchema = new mongoose.Schema({
   ],
   shippingInfo: {
     name: { type: String, required: true },
+    email: { type: String, required: true },
     phone: { type: String, required: true },
     address: { type: String, required: true },
   },
@@ -49,6 +50,22 @@ const OrderSchema = new mongoose.Schema({
     vnpayTransactionId: { type: String }, // Mã giao dịch từ VNPay 
     vnpayResponseCode: { type: String }, // Mã phản hồi từ VNPay
     paidAt: { type: Date },
+  },
+  recipientType: {
+    type: String,
+    enum: ["self", "other"],
+    default: "self",
+    required: [true, "Recipient type is required"],
+  },
+  deliveryDate: {
+    type: Date,
+    required: [true, "Delivery date is required"],
+  },
+  deliveryMethod: {
+    type: String,
+    enum: ["pickup", "delivery"],
+    default: "delivery",
+    required: [true, "Delivery method is required"],
   },
   message: String,
   createdBy: {

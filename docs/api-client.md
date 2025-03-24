@@ -144,6 +144,18 @@
 ### 5.1 Search Products
 **API:** `[GET] /v1/search`
 - Tìm kiếm sản phẩm trong hệ thống.
+#### Query Parameters
+
+| Tên | Kiểu dữ liệu | Giá trị mặc định | Ví dụ |
+|------|-------------|----------------|--------|
+| keyword | String | Không có | keyword=hoa |
+| minPrice | Number | Không có | minPrice=500000 |
+| maxPrice | Number | Không có | maxPrice=1000000 |
+| categorySlug | String | Không có | categorySlug=bo-hoa |
+| sortBy | String | relevance | sortBy=price |
+| order | String | desc | order=asc |
+| page | Number | 1 | page=2 |
+| limit | Number | 10 | limit=5 |
 
 ---
 ## 6. **Home API**

@@ -23,7 +23,7 @@ module.exports.listAPI = async (req, res) => {
     const products = await Product.find(filter)
       .sort({ [sortBy]: order })
       .limit(parseInt(limit))
-      .select("title price discountPercentage thumbnail stock createdAt slug")
+      .select("title price discountPercentage thumbnail stock createdAt slug categoryId")
       .skip((page - 1) * limit)
 
     res.status(200).json({

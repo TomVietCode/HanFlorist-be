@@ -4,13 +4,13 @@ const User = require("../../models/user.model")
 // [GET] /admin/roles
 module.exports.listApi = async (req, res) => {
   try {
-    const records = await Role.find({ status: "active" }).lean()
+    records = await Role.find({status: { $ne: "deleted" }}).lean()
 
     for (let role of records) {
       const countUser = await User.countDocuments({ roleId: role._id })
       role.totalUser = countUser
     }
-
+    
     res.status(200).json({
       data: records,
     })

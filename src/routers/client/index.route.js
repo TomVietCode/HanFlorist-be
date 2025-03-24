@@ -28,7 +28,7 @@ module.exports = (app) => {
 
   app.use(version + "/orders", orderRoute)
 
-  app.use(version + "/categories", async (req, res) => {
+  app.get(version + "/categories", async (req, res) => {
     const categories = await Category.find({
       status: "active",
     }).lean()

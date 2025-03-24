@@ -141,15 +141,7 @@ module.exports.listAPI = async (req, res) => {
 
     // Trả về danh sách đơn hàng và thông tin phân trang
     res.status(200).json({
-      data: {
-        orders,
-        pagination: {
-          currentPage: pageNum,
-          limit: limitNum,
-          totalOrders,
-          totalPages,
-        },
-      },
+      data: orders
     });
   } catch (error) {
     res.status(400).json({

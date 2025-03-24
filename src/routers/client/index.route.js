@@ -7,8 +7,13 @@ const authRoute = require("./auth.route")
 const orderRoute = require("./order.route")
 const requireAuth = require("../../middlewares/auth.middleware")
 const { createCartMdl } = require("../../middlewares/cart.middleware")
+const { getCategoryTree } = require("../../middlewares/category.middleware")
+const Category = require("../../models/category.model")
+const buildTree = require("../../helpers/buildTree")
 module.exports = (app) => {
   const version = "/v1"
+  
+  app.use(getCategoryTree)
   app.use(requireAuth("client"))
   app.use(createCartMdl)
   
@@ -25,4 +30,13 @@ module.exports = (app) => {
   app.use(version + "/search", searchRoute);
 
   app.use(version + "/orders", orderRoute)
+
+  app.use(version + "/categories", async (req, res) => {
+    const categories = await Category.find({
+      status: "active",
+    }).lean()
+    
+    const categoriesTree = buildTree(categories);
+    res.status(200).json(categoriesTree);
+  })
 }

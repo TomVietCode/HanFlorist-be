@@ -9,9 +9,7 @@ router.get("/google", passport.authenticate("google", { scope: ["profile", "emai
 
 router.get("/google/callback", passport.authenticate("google", { session: false }), (req, res) => {
   const { token } = req.user
-  res.status(200).json({
-    data: token,
-  })
+  res.redirect(`${process.env.FRONTEND_URL || "http://localhost:3000"}/login-success?token=${token}`);
 })
 
 router.post("/signup", controller.signup);

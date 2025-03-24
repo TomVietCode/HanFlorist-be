@@ -58,11 +58,15 @@ module.exports.updateApi = async (req, res) => {
 module.exports.deleteApi = async (req, res) => {
   try {
     const id = req.params.id
-
+    const { isHard = false } = req.body
     const role = await Role.findOne({ _id: id })
     if (!role ) throw new Error("Data not found")
     
-    await Role.findByIdAndUpdate(id, { status: "deleted "})
+    if(isHard) {
+      await Role.deleteOne({ _id: id })
+    } else {
+      await Role.findByIdAndUpdate(id, { status: "deleted" })
+    }
     res.status(200).json({
       data: true,
     })

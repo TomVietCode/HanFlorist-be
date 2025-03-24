@@ -62,7 +62,7 @@ module.exports.deleteApi = async (req, res) => {
     const role = await Role.findOne({ _id: id })
     if (!role ) throw new Error("Data not found")
     
-    await Role.findByIdAndUpdate(id)
+    await Role.findByIdAndUpdate(id, { status: "deleted "})
     res.status(200).json({
       data: true,
     })

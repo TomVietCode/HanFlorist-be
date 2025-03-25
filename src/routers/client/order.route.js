@@ -4,7 +4,7 @@ const router = express.Router()
 const controller = require("../../controllers/client/order.controller")
 const validateCreateOrder = require("../../validates/order")
 
-router.post("/", validateCreateOrder, controller.createOrderAPI)
+router.post("/", controller.createOrderAPI)
 
 router.get("/vnpay-return", controller.handleVNPayReturn)
 

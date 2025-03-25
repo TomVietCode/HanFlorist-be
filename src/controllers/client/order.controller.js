@@ -16,7 +16,6 @@ module.exports.createOrderAPI = async (req, res) => {
       deliveryDate,
       deliveryMethod,
     } = req.body; 
-    
     let cartItems, totalAmount;
     if (userId) {
       const cart = await Cart.findOne({ userId }).populate("products.productId", "title price stock discountPercentage");

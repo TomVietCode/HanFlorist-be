@@ -11,7 +11,7 @@ const shippingInfoSchema = z.object({
 const cartItemSchema = z.object({
   productId: z.string().min(1, "Product ID is required"),
   quantity: z.number().min(1, "Quantity must be at least 1"),
-  subtotal: z.number().min(0, "Subtotal must be non-negative"),
+  subTotal: z.number().min(0, "Subtotal must be non-negative"),
 });
 
 const createOrderSchema = z.object({

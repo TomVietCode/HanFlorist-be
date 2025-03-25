@@ -16,7 +16,7 @@ module.exports.createOrderAPI = async (req, res) => {
       deliveryDate,
       deliveryMethod,
     } = req.body; 
-
+    
     let cartItems, totalAmount;
     if (userId) {
       const cart = await Cart.findOne({ userId }).populate("products.productId", "title price stock discountPercentage");
@@ -30,11 +30,11 @@ module.exports.createOrderAPI = async (req, res) => {
       }));
       totalAmount = cart.totalAmount;
     } else {
-      if (!cartFromBody || !cartFromBody.length) {
+      if (!cartFromBody) {
         throw new Error("Cart is required when user is not logged in");
       }
-      cartItems = cartFromBody;
-      totalAmount = cartFromBody.reduce((sum, item) => sum + item.subtotal, 0);
+      cartItems = cartFromBody.products;
+      totalAmount = cartFromBody.totalAmount;
     }
 
     const productIds = cartItems.map((item) => item.productId);
@@ -67,7 +67,7 @@ module.exports.createOrderAPI = async (req, res) => {
       items: cartItems.map((item) => ({
         productId: item.productId,
         quantity: item.quantity,
-        subtotal: item.subtotal,
+        subTotal: item.subTotal,
       })),
       shippingInfo,
       paymentMethod,

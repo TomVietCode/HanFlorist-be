@@ -17,7 +17,7 @@ module.exports.listAPI = async (req, res) => {
     if(status) filter.status = status
     if (paymentStatus) filter.paymentStatus = paymentStatus
     if(search) filter.orderCode = new RegExp(search, "i")
-  
+    console.log(filter)
     const orders = await Order.find(filter).select("-items -paymentDetails -message -shippingInfo")
     .populate("userId", "name")
     .populate("createdBy", "name")

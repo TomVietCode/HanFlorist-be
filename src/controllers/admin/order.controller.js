@@ -44,7 +44,7 @@ module.exports.getAPI = async (req, res) => {
   const { id } = req.params
 
   try {
-    const order = await Order.findById(id)
+    const order = await Order.findOne({ orderCode: id })
       .populate("userId", "name")
       .populate("items.productId", "-_id title thumbnail price discountPercentage")
       .populate("createdBy", "name")

@@ -5,11 +5,14 @@ const categoryRoute = require("./category.route")
 const roleRoute = require("./role.route")
 const orderRoute = require("./order.route")
 const userRoute = require("./user.route")
+const dashboardRoute = require("./dashboard.route")
 
 module.exports = (app) => {
   const path = "/admin"
 
   app.use(path + "/auth", authRoute)
+
+  app.use(path + "/dashboard", requireAuth("admin"), dashboardRoute)
 
   app.use(path + "/products", requireAuth("admin"), productRoute)
 

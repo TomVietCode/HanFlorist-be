@@ -2,7 +2,7 @@ const Cart = require("../../models/cart.model");
 const Product = require("../../models/products.model");
 const Order = require("../../models/order.model");
 const { generateRandomNumber } = require("../../helpers/generateRandom.helper");
-const { processVNPayPayment, verifyVNPayResponse } = require("../../helpers/vnPayService");
+const { processVNPayPayment, verifyVNPayResponse } = require("../../helpers/vnpayService");
 
 // [POST] /v1/orders
 module.exports.createOrderAPI = async (req, res) => {

@@ -9,7 +9,7 @@ router.get("/google", passport.authenticate("google", { scope: ["profile", "emai
 
 router.get("/google/callback", passport.authenticate("google", { session: false }), (req, res) => {
   const { token } = req.user
-  res.redirect(`${process.env.FRONTEND_URL || "http://localhost:3000"}/login-success?token=${token}`);
+  res.redirect(`${process.env.FRONTEND_URL || "https://hanflorist.vercel.app"}/login-success?token=${token}`);
 })
 
 router.post("/signup", controller.signup);

@@ -120,11 +120,11 @@ module.exports.handleVNPayReturn = async (req, res) => {
   if (vnp_Params.vnp_ResponseCode === "00") {
     order.paymentStatus = "paid";
     await order.save();
-    res.redirect("http://localhost:3000/order-success?orderId=" + order._id);
+    res.redirect(`${process.env.FRONTEND_URL || "https://hanflorist.vercel.app"}/order-success?orderId=${order._id}`);
   } else {
     order.paymentStatus = "failed";
     await order.save();
-    res.redirect("http://localhost:3000/order-failed?orderId=" + order._id);
+    res.redirect(`${process.env.FRONTEND_URL || "https://hanflorist.vercel.app"}/order-failed?orderId=${order._id}`);
   }
 };
 

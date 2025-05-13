@@ -6,7 +6,7 @@ const vnp_Config = {
   vnp_TmnCode: process.env.VNP_TMNCODE, 
   vnp_HashSecret: process.env.VNP_HASHSECRET, 
   vnp_Url: process.env.VNP_URL || "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
-  vnp_ReturnUrl: `http://${process.env.BASE_URL}/v1/orders/vnpay-return`,
+  vnp_ReturnUrl: `${process.env.BACKEND_URL || "https://hanflorist-be.onrender.com"}/v1/orders/vnpay-return`,
 };
 
 // Hàm tạo URL thanh toán VNPay

@@ -8,7 +8,7 @@ module.exports.listApi = async (req, res) => {
       status,
       search,
       page = 1,
-      limit = 10,
+      limit = 100,
       sortKey = "createdAt",
       sortValue = "desc",
     } = req.query
@@ -35,6 +35,9 @@ module.exports.listApi = async (req, res) => {
         { path: "createdBy", select: "name" },
         { path: "updatedBy", select: "name" },
       ])
+
+    // Add debug information
+    console.log(`Products found: ${products.length}, Limit: ${limit}, Page: ${page}`)
 
     res.status(200).json({
       data: products,
